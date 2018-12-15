@@ -8,5 +8,22 @@
 </head>
 <body>
     <p>welcome to chat app</p>
+    <!-- loading client side library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- below js code will run after io library loaded -->
+    <script>
+        // initiat an request and open up a connection to server
+        let socket = io(); // returns a Socket api. see doc https://socket.io/docs/client-api/
+        // register a handler for given event 'connect'
+        //Fired upon a connection including a successful reconnection.
+        // server will listen for incomming connection request
+        socket.on('connect', () => {
+            console.log('connected to server');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('disconnect to server');
+        });
+    </script>
 </body>
 </html>
