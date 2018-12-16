@@ -19,6 +19,16 @@ io.on('connection', (socket) => {
     socket.on('disconnect', ()=>{
         console.log('user was disconnected');
     });
+
+    socket.on('createMessage', (message) => {
+        console.log(message);
+    }); 
+
+    socket.emit('newMessage', {from: 'me', text: 'hi there', createdAt: 13424});
+
+    socket.on('createEmail', (newEmail) => {
+        console.log('emailCreated', newEmail);
+    });
 });
 
 
@@ -27,3 +37,9 @@ server.listen(port, () => {
 });
 
 
+
+
+/* Socket.IO primarily uses the WebSocket protocol 
+WebSocket is a computer communications protocol, 
+providing full-duplex communication channels over a single TCP connection.
+WebSocket is a different protocol from HTTP */
