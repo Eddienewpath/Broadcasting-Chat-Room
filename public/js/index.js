@@ -8,7 +8,7 @@ let socket = io(); // returns a Socket api. see doc https://socket.io/docs/clien
 // because some browser will not support it. 
 socket.on('connect', function (){
     console.log('connected to server');
-    socket.emit('createMessage',{from: 'suki', text: 'hi eddie'});
+    
 });
 
 socket.on('disconnect', function(){

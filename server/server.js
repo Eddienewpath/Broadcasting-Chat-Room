@@ -16,6 +16,21 @@ app.use(express.static(publicPath));
 //socket.io server needs a gate to communicate with each client, so socket is the gate
 io.on('connection', (socket) => {
     console.log('new user is connected'); 
+
+    //this client socket will receive greeting from server. 
+    socket.emit('newMessage', {
+        from : 'Admin',
+        text : 'welcome to chat app',
+        createdAt: new Date().getTime()
+    });
+
+    // client just connect to the server will not receive this text. 
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'new user joined',
+        createdAt: new Date().getTime()
+    });
+
     socket.on('createMessage', (message) => {
         // console.log(message);
         // emite to everyone who is connecting to the server.
@@ -24,6 +39,13 @@ io.on('connection', (socket) => {
             text: message.text,
             createdAt: new Date().getTime()
         });
+
+        // //everybody but this socket(not server)
+        // socket.broadcast.emit('newMessage', {
+        //     from: message.from,
+        //     text: message.text,
+        //     createdAt: new Date().getTime()
+        // });
     }); 
 
     socket.on('disconnect', ()=>{
