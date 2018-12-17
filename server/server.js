@@ -15,20 +15,26 @@ app.use(express.static(publicPath));
 // so the callback function is to handle connection events.
 //socket.io server needs a gate to communicate with each client, so socket is the gate
 io.on('connection', (socket) => {
-    console.log('new user is connected');
+    console.log('new user is connected'); 
+    socket.on('createMessage', (message) => {
+        // console.log(message);
+        // emite to everyone who is connecting to the server.
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
+    }); 
+
     socket.on('disconnect', ()=>{
         console.log('user was disconnected');
     });
 
-    socket.on('createMessage', (message) => {
-        console.log(message);
-    }); 
+    // socket.emit('newMessage', {from: 'me', text: 'hi there', createdAt: 13424});
 
-    socket.emit('newMessage', {from: 'me', text: 'hi there', createdAt: 13424});
-
-    socket.on('createEmail', (newEmail) => {
-        console.log('emailCreated', newEmail);
-    });
+    // socket.on('createEmail', (newEmail) => {
+    //     console.log('emailCreated', newEmail);
+    // });
 });
 
 
