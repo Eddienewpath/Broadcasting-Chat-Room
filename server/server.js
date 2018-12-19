@@ -4,6 +4,7 @@ const path = require('path'); // node build in module for resolving ../ path
 const publicPath = path.join(__dirname, '../public'); // __dirname meaning current dir
 const socketIO = require('socket.io')
 const express = require('express');
+const {generateMessage} = require('./util/message');
 const port = process.env.PORT || 3000;
 const app = express();
 // covert express server into http server. which is needed for config socket.io
@@ -18,27 +19,15 @@ io.on('connection', (socket) => {
     console.log('new user is connected'); 
 
     //this client socket will receive greeting from server. 
-    socket.emit('newMessage', {
-        from : 'Admin',
-        text : 'welcome to chat app',
-        createdAt: new Date().getTime()
-    });
+    socket.emit('newMessage', generateMessage('Admin', 'welcome to chat app'));
 
-    // client just connect to the server will not receive this text. 
-    socket.broadcast.emit('newMessage', {
-        from: 'Admin',
-        text: 'new user joined',
-        createdAt: new Date().getTime()
-    });
+    // client just connecting to the server will not receive this text. 
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'new user joined'));
 
     socket.on('createMessage', (message) => {
         // console.log(message);
         // emite to everyone who is connecting to the server.
-        io.emit('newMessage', {
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().getTime()
-        });
+        io.emit('newMessage', generateMessage(message.from, message.text));
 
         // //everybody but this socket(not server)
         // socket.broadcast.emit('newMessage', {
