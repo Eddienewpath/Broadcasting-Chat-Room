@@ -15,6 +15,26 @@ socket.on('disconnect', function(){
     console.log('disconnect to server');
 });
 
-socket.on('newMessage', function(msg){
-    console.log('newEmail', msg);
+socket.on('newMessage', function(message){
+    console.log('newEmail', message);
+    let li = jQuery('<li></li>');
+    li.text(`${message.from}: ${message.text}`);
+    jQuery('#messages').append(li);
+});
+
+// example of ack
+// socket.emit('createMessage', {from: 'suki', text: 'hi there'},  function(ack){
+//     console.log('received it', ack);
+// });
+
+// on is the event listener e -> event
+jQuery('#message-form').on('submit', function(e){
+    e.preventDefault(); // prevent default full page refresh when submit a form
+
+    socket.emit('createMessage', {
+        from: 'User',
+        text: jQuery('[name=message]').val()
+    }, function(){
+        // ack
+    });
 });

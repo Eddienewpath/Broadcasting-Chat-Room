@@ -24,11 +24,12 @@ io.on('connection', (socket) => {
     // client just connecting to the server will not receive this text. 
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'new user joined'));
 
-    socket.on('createMessage', (message) => {
+    // adding second param callback sending ack back to client. 
+    socket.on('createMessage', (message, callback) => {
         // console.log(message);
         // emite to everyone who is connecting to the server.
         io.emit('newMessage', generateMessage(message.from, message.text));
-
+        callback('sending from server');
         // //everybody but this socket(not server)
         // socket.broadcast.emit('newMessage', {
         //     from: message.from,
