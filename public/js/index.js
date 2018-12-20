@@ -16,9 +16,19 @@ socket.on('disconnect', function(){
 });
 
 socket.on('newMessage', function(message){
-    console.log('newEmail', message);
+    console.log('newMessage', message);
     let li = jQuery('<li></li>');
     li.text(`${message.from}: ${message.text}`);
+    jQuery('#messages').append(li);
+});
+
+socket.on('newLocationMessage', function(message){
+    let li = jQuery('<li></li>');
+    // open a new tab  _blank
+    let a = jQuery('<a target="_blank">my current location</a>');
+    li.text(`${message.from}: `);
+    a.attr('href', message.url);
+    li.append(a);
     jQuery('#messages').append(li);
 });
 
@@ -36,5 +46,29 @@ jQuery('#message-form').on('submit', function(e){
         text: jQuery('[name=message]').val()
     }, function(){
         // ack
+    });
+});
+
+// add listener for geolocation button 
+let locationButtion = jQuery('#send-location');
+// click event listener 
+// modern browser has builtin geolocation api. 
+locationButtion.on('click', function(){
+    if(!navigator.geolocation){
+        return alert('Geolocation not supported by your browser');
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        // successful fetch 
+        function(postion){
+            // console.log(postion);
+            socket.emit('createLocationMessage', {
+                latitude: postion.coords.latitude,
+                longitude: postion.coords.longitude
+            });
+    },
+    // denied permission for accessing location
+    function(){
+        alert('unbale to fetch the location')
     });
 });

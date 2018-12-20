@@ -4,7 +4,7 @@ const path = require('path'); // node build in module for resolving ../ path
 const publicPath = path.join(__dirname, '../public'); // __dirname meaning current dir
 const socketIO = require('socket.io')
 const express = require('express');
-const {generateMessage} = require('./util/message');
+const {generateMessage, generateLocationMessage} = require('./util/message');
 const port = process.env.PORT || 3000;
 const app = express();
 // covert express server into http server. which is needed for config socket.io
@@ -37,6 +37,10 @@ io.on('connection', (socket) => {
         //     createdAt: new Date().getTime()
         // });
     }); 
+
+    socket.on('createLocationMessage', (coords) => {
+        io.emit('newLocationMessage', generateLocationMessage('admin', coords.latitude, coords.longitude));
+    })
 
     socket.on('disconnect', ()=>{
         console.log('user was disconnected');
