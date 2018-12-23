@@ -40,12 +40,13 @@ socket.on('newLocationMessage', function(message){
 // on is the event listener e -> event
 jQuery('#message-form').on('submit', function(e){
     e.preventDefault(); // prevent default full page refresh when submit a form
-
+    let messageTextBox = jQuery('[name=message');
     socket.emit('createMessage', {
         from: 'User',
-        text: jQuery('[name=message]').val()
+        text: messageTextBox.val()
     }, function(){
-        // ack
+        // clear the message box
+        messageTextBox.val('');
     });
 });
 
@@ -57,10 +58,13 @@ locationButtion.on('click', function(){
     if(!navigator.geolocation){
         return alert('Geolocation not supported by your browser');
     }
-
-    navigator.geolocation.getCurrentPosition(
+    // disable the button during the brower fetching the location info and sending
+    locationButtion.attr('disabled', 'disabled').text('sending location...');
+    navigator.geolocation.getCurrentPosition( 
         // successful fetch 
         function(postion){
+            // once the location is done fetching/encounter err enable the send locaton button again 
+            locationButtion.removeAttr('disabled').text('Send location');;
             // console.log(postion);
             socket.emit('createLocationMessage', {
                 latitude: postion.coords.latitude,
@@ -69,6 +73,7 @@ locationButtion.on('click', function(){
     },
     // denied permission for accessing location
     function(){
+        locationButtion.removeAttr('disabled').text('Send location');
         alert('unbale to fetch the location')
     });
 });
