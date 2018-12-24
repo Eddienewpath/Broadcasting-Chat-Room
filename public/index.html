@@ -4,70 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- // rel : relation -->
-    <link rel="stylesheet" href="/css/style.css">
-    <title>Document</title>
+    <title>Join | ChatApp</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
-<!-- people list -->
-<body class='chat'>
-    <div class="chat__sidebar">
-        <h3>people</h3>
-        <div id="users"></div>
-    </div>
-<!-- chat area -->
-
-    <div class="chat__main">
-            <ol id="messages" class="chat__messages"></ol>
-            <div class="chat__footer">
-                    <form id="message-form">
-                        <!-- autofocus will move the cursor to the text box, autocomplete turn off -->
-                            <input name="message" type="text" placeholder="Message" autofocus autocomplete="off"/>
-                            <button>Send</button>
-                        </form>
-                        <button id="send-location">Send localtion</button>
-            </div>     
-    </div>
-
-    <!-- templating -->
-    <script id="message-template" type="text/template">
-        <!-- style="list-style: none;" will get rid of the bullet point/numbering in the list -->
-        <li class="message" style="list-style: none;">
-            <div class="message__title">
-                <h4>{{from}}</h4>
-                <span>{{createdAt}}</span>
+<body class="centered-form">
+        <div class="centered-form__form">
+          <form action="/chat.html">
+            <div class="form-field">
+              <h3>Join a Chat<h3>
             </div>
-
-            <div class="message__body">
-                <p>{{text}}</p>
+            <div class="form-field">
+              <label>Display name</label>
+              <input type="text" name="name" autofocus/>
             </div>
-        </li>
-    </script>
-
-    <script id="location-message-template" type="text/template">
-        <!-- style="list-style: none;" will get rid of the bullet point/numbering in the list -->
-        <li class="message" style="list-style: none;">
-            <div class="message__title">
-                <h4>{{from}}</h4>
-                <span>{{createdAt}}</span>
+            <div class="form-field">
+              <label>Room name</label>
+              <input type="text" name="room"/>
             </div>
-
-            <div class="message__body">
-                <p>
-                    <a href="{{url}}"" target="_blank">My current location</a>
-                </p>
+            <div class="form-field">
+              <button>Join</button>
             </div>
-        </li>
-    </script>
-
-    <!-- loading client side library -->
-    <script src="/socket.io/socket.io.js"></script>
-    <!-- load in jquery -->
-    <script src= "/js/libs/jquery-3.3.1.min.js"></script>
-    <!-- copy moment lib from node_modules dir to front end and use it -->
-    <script src="/js/libs/moment.min.js"></script>
-    <!-- templating library -->
-    <script src="/js/libs/mustache.js"></script>
-    <!-- below js code will run after io library loaded -->
-    <script src="/js/index.js"></script>
-</body>
+          </form>
+        </div>
+      </body>
+      
 </html>
