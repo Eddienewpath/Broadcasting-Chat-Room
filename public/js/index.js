@@ -4,6 +4,21 @@ let socket = io(); // returns a Socket api. see doc https://socket.io/docs/clien
 //Fired upon a connection including a successful reconnection.
 // server will listen for incomming connection request
 
+function scrollToBottom(){
+    //selectors
+    let messages = jQuery('#messages');
+    let newMessage = messages.children('li:last-child');
+    //heights
+    let clientHeight = messages.prop('clientHeight');
+    let scrollTop = messages.prop('scrollTop');
+    let scrollHeight = messages.prop('scrollHeight');
+    let newMessageHeight = newMessage.innerHeight();
+    let lastMessageHeight = newMessage.prev().innerHeight();
+
+    if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight){
+        messages.scrollTop(scrollHeight);
+    }
+}
 // client side use normal function declare, avoid using arrow function
 // because some browser will not support it. 
 socket.on('connect', function (){
@@ -28,6 +43,7 @@ socket.on('newMessage', function(message){
     }); //return template just rendered 
     
     jQuery('#messages').append(html); // added the temp to the list 
+    scrollToBottom();
 });
 
 socket.on('newLocationMessage', function(message){
@@ -45,6 +61,7 @@ socket.on('newLocationMessage', function(message){
         createdAt: formattedTime
     });
     jQuery('#messages').append(html);
+    scrollToBottom()
 });
 
 // example of ack
