@@ -26,12 +26,45 @@
                         <button id="send-location">Send localtion</button>
             </div>     
     </div>
+    <!-- templating -->
+    <script id="message-template" type="text/template">
+        <!-- style="list-style: none;" will get rid of the bullet point/numbering in the list -->
+        <li class="message" style="list-style: none;">
+            <div class="message__title">
+                <h4>{{from}}</h4>
+                <span>{{createdAt}}</span>
+            </div>
+
+            <div class="message__body">
+                <p>{{text}}</p>
+            </div>
+        </li>
+    </script>
+
+    <script id="location-message-template" type="text/template">
+        <!-- style="list-style: none;" will get rid of the bullet point/numbering in the list -->
+        <li class="message" style="list-style: none;">
+            <div class="message__title">
+                <h4>{{from}}</h4>
+                <span>{{createdAt}}</span>
+            </div>
+
+            <div class="message__body">
+                <p>
+                    <a href="{{url}}"" target="_blank">My current location</a>
+                </p>
+            </div>
+        </li>
+    </script>
+
     <!-- loading client side library -->
     <script src="/socket.io/socket.io.js"></script>
     <!-- load in jquery -->
     <script src= "/js/libs/jquery-3.3.1.min.js"></script>
     <!-- copy moment lib from node_modules dir to front end and use it -->
     <script src="/js/libs/moment.min.js"></script>
+    <!-- templating library -->
+    <script src="/js/libs/mustache.js"></script>
     <!-- below js code will run after io library loaded -->
     <script src="/js/index.js"></script>
 </body>
