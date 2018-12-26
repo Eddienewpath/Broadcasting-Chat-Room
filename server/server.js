@@ -45,9 +45,12 @@ io.on('connection', (socket) => {
 
     // adding second param callback sending ack back to client. 
     socket.on('createMessage', (message, callback) => {
-        // console.log(message);
-        // emite to everyone who is connecting to the server.
-        io.emit('newMessage', generateMessage(message.from, message.text));
+        let user = users.getUser(socket.id);
+        if(user && isRealString(message.text)){
+            // emite to everyone who is connecting to the server.
+        io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+        }
+    
         callback();
         // //everybody but this socket(not server)
         // socket.broadcast.emit('newMessage', {
@@ -58,8 +61,11 @@ io.on('connection', (socket) => {
     }); 
 
     socket.on('createLocationMessage', (coords) => {
-        io.emit('newLocationMessage', generateLocationMessage('admin', coords.latitude, coords.longitude));
-    })
+        let user = users.getUser(socket.id);
+        if(user){
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
+    });
 
     socket.on('disconnect', ()=>{
         // console.log('user was disconnected');
