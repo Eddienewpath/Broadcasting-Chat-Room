@@ -5,11 +5,14 @@ const publicPath = path.join(__dirname, '../public'); // __dirname meaning curre
 const socketIO = require('socket.io')
 const express = require('express');
 const {generateMessage, generateLocationMessage} = require('./util/message');
+const {isRealString} = require('./util/validation');
+const {Users} = require('./util/users');
 const port = process.env.PORT || 3000;
 const app = express();
 // covert express server into http server. which is needed for config socket.io
 const server = http.createServer(app); // see doc for detail
 const io = socketIO(server); // this will return websocket server. ready for emittign events.... 
+let users = new Users();
 //server public directry
 app.use(express.static(publicPath));
 //register a event handler for given event for socket.io server
@@ -18,11 +21,27 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('new user is connected'); 
 
-    //this client socket will receive greeting from server. 
-    socket.emit('newMessage', generateMessage('Admin', 'welcome to chat app'));
+    
 
-    // client just connecting to the server will not receive this text. 
-    socket.broadcast.emit('newMessage', generateMessage('Admin', 'new user joined'));
+    socket.on('join', (params, callback)=>{
+        if(!isRealString(params.name) || !isRealString(params.room)){
+            return callback('not string');
+        }
+        // io.emit -> io.to(room).emit()
+        // io.broadcast.emit -> io.broadcast.to(room).emit()
+
+        socket.join(params.room); // socket.leave(room);
+        users.removeUser(socket.id);
+        users.addUsers(socket.id, params.name, params.room);
+        io.to(params.room).emit('updateUserList',users.getUserList(params.room));
+        //this client socket will receive greeting from server. 
+        socket.emit('newMessage', generateMessage('Admin', 'welcome to chat app'));
+         // client just connecting to the server will not receive this text. 
+        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
+        callback();
+    });
+
+        
 
     // adding second param callback sending ack back to client. 
     socket.on('createMessage', (message, callback) => {
@@ -43,7 +62,12 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', ()=>{
-        console.log('user was disconnected');
+        // console.log('user was disconnected');
+        let user = users.removeUser(socket.id);
+        if(user){
+            io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+            io.to(user.room).emit('newMessage', generateMessage('admin', `${user.name} has left`)); 
+        }
     });
 
     // socket.emit('newMessage', {from: 'me', text: 'hi there', createdAt: 13424});

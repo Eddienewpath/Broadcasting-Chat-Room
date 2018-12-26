@@ -22,12 +22,31 @@ function scrollToBottom(){
 // client side use normal function declare, avoid using arrow function
 // because some browser will not support it. 
 socket.on('connect', function (){
-    console.log('connected to server');
+    // console.log('connected to server');
+    let param = jQuery.deparam(window.location.search);
+    // server will hear for join event
+    socket.emit('join', param, function(err){
+        if(err){
+            alert(err);
+            // change the page to root
+            window.location.href = '/';
+        }else{
+            console.log('no err');
+        }
+    });
     
 });
 
 socket.on('disconnect', function(){
     console.log('disconnect to server');
+});
+
+socket.on('updateUserList', function(users){
+    let ol = jQuery('<ol></ol>');
+    users.forEach(function(user){
+        ol.append(jQuery('<li></li>').text(user));
+    });
+    jQuery('#users').html(ol);
 });
 
 socket.on('newMessage', function(message){
