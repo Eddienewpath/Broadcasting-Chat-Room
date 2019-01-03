@@ -1,4 +1,4 @@
-const http = require('http'); // built in
+const http = require('http'); 
 const path = require('path'); // node build in module for resolving ../ path
 // join method get rid of ../ path, avoid in and out of a dir
 const publicPath = path.join(__dirname, '../public'); // __dirname meaning current dir
