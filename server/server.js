@@ -20,28 +20,28 @@ app.use(express.static(publicPath));
 //socket.io server needs a gate to communicate with each client, so socket is the gate
 io.on('connection', (socket) => {
     console.log('new user is connected'); 
-
-    
-
+// 'join 'this is a custom event
     socket.on('join', (params, callback)=>{
         if(!isRealString(params.name) || !isRealString(params.room)){
-            return callback('not string');
+            return callback('not string'); // pass the string to callback function in client side. 
         }
         // io.emit -> io.to(room).emit()
         // io.broadcast.emit -> io.broadcast.to(room).emit()
-
+        let userExisted = users.userNameExisted(params.name, params.room);
+        if(userExisted){
+            return callback('你大爷的换个名字行不行')
+        }
         socket.join(params.room); // socket.leave(room);
-        users.removeUser(socket.id);
+        // console.log('socket id: '+ socket.id);
+        users.removeUser(socket.id);//A unique identifier for the session, that comes from the underlying Client
         users.addUsers(socket.id, params.name, params.room);
-        io.to(params.room).emit('updateUserList',users.getUserList(params.room));
+        io.to(params.room).emit('updateUserList', users.getUserList(params.room));
         //this client socket will receive greeting from server. 
         socket.emit('newMessage', generateMessage('Admin', 'welcome to chat app'));
          // client just connecting to the server will not receive this text. 
         socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
         callback();
-    });
-
-        
+    });       
 
     // adding second param callback sending ack back to client. 
     socket.on('createMessage', (message, callback) => {
@@ -87,9 +87,6 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
     console.log(`server is up on port ${port}`);
 });
-
-
-
 
 /* Socket.IO primarily uses the WebSocket protocol 
 WebSocket is a computer communications protocol, 

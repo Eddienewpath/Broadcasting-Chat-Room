@@ -23,6 +23,7 @@
                     <form id="message-form">
                         <!-- autofocus will move the cursor to the text box, autocomplete turn off -->
                             <input name="message" type="text" placeholder="Message" autofocus autocomplete="off"/>
+                            <!-- <textarea id="message-input"></textarea> -->
                             <button>Send</button>
                         </form>
                         <button id="send-location">Send localtion</button>
@@ -64,6 +65,12 @@
     <script src="/socket.io/socket.io.js"></script>
     <!-- load in jquery -->
     <script src= "/js/libs/jquery-3.3.1.min.js"></script>
+    <!-- <script src= "/js/libs/jQueryEmoji.js"></script>
+    <script>
+        $(function(){
+	$('input').Emoji(); -->
+<!-- }); -->
+    </script>
     <!-- copy moment lib from node_modules dir to front end and use it -->
     <script src="/js/libs/moment.min.js"></script>
     <!-- templating library -->

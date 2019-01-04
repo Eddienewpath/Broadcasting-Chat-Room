@@ -1,4 +1,5 @@
 const moment = require('moment'); // awsome timestamp lib. allow easy formatting
+
 let generateMessage = (from, text) => {
     return {
         from,

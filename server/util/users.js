@@ -26,6 +26,13 @@ class Users{
     getUser (id) {
         return this.users.filter((user) => user.id == id)[0];
     }
+
+    userNameExisted (name, room) {
+        let users = this.users.filter((user) => user.room === room && user.name === name);
+        if(users[0]){
+            return true; 
+        }
+    }
 }
 
 module.exports = {Users};

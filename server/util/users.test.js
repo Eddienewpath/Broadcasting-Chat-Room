@@ -20,6 +20,7 @@ describe('Users', ()=> {
         }];
     });
     
+    
     it('should add user', () => {
         let users = new Users();
         let user = {
@@ -65,5 +66,10 @@ describe('Users', ()=> {
     it('should return name for react course', () => {
         let userList = users.getUserList('react course');
         expect(userList).toEqual(['suki']);
+    });
+
+    it('should return true', () => {
+        let testUser = {id: '78', name: 'eddie', room: 'node course'};
+        expect(users.userNameExisted(testUser.name, testUser.room)).toBe(true);
     });
 });

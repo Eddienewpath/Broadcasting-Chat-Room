@@ -3,7 +3,7 @@ let socket = io(); // returns a Socket api. see doc https://socket.io/docs/clien
 // register a handler for given event 'connect'
 //Fired upon a connection including a successful reconnection.
 // server will listen for incomming connection request
-
+// myChat.plugin(ChatEngineCore.plugin['chat-engine-emoji']());
 function scrollToBottom(){
     //selectors
     let messages = jQuery('#messages');
@@ -23,13 +23,13 @@ function scrollToBottom(){
 // because some browser will not support it. 
 socket.on('connect', function (){
     // console.log('connected to server');
-    let param = jQuery.deparam(window.location.search);
+    let param = jQuery.deparam(window.location.search); // key value pair 
     // server will hear for join event
     socket.emit('join', param, function(err){
         if(err){
             alert(err);
             // change the page to root
-            window.location.href = '/';
+            window.location.href = '/'; 
         }else{
             console.log('no err');
         }
