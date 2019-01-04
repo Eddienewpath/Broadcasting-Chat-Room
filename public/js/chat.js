@@ -89,7 +89,7 @@ socket.on('newLocationMessage', function(message){
 // });
 
 // on is the event listener e -> event
-jQuery('#message-form').on('submit', function(e){
+jQuery('#message-form').on('submit touchstart', function(e){
     e.preventDefault(); // prevent default full page refresh when submit a form
     let messageTextBox = jQuery('[name=message');
     socket.emit('createMessage', {
@@ -99,6 +99,7 @@ jQuery('#message-form').on('submit', function(e){
         messageTextBox.val('');
     });
 });
+
 
 // add listener for geolocation button 
 let locationButtion = jQuery('#send-location');
